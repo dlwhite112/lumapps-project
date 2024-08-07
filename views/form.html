@@ -1,0 +1,54 @@
+<!-- public/form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumapps API Interaction</title>
+  <style>
+    #response {
+      white-space: pre-wrap; /* Preserves whitespace and line breaks */
+      background-color: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Lumapps API Interaction</h1>
+  <form id="get-data-form">
+    <h2>Get Data</h2>
+    <button type="submit">Fetch Data</button>
+  </form>
+  <form id="post-data-form">
+    <h2>Post Data</h2>
+    <label for="key">Key:</label>
+    <input type="text" id="key" name="key">
+    <label for="value">Value:</label>
+    <input type="text" id="value" name="value">
+    <button type="submit">Submit Data</button>
+  </form>
+  <div id="response"></div>
+  <script>
+    document.getElementById('get-data-form').onsubmit = async function(event) {
+      event.preventDefault();
+      const response = await fetch('/getData', { method: 'POST' });
+      const data = await response.json();
+      document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+    };
+
+    document.getElementById('post-data-form').onsubmit = async function(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const response = await fetch('/postData', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData))
+      });
+      const data = await response.json();
+      document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+    };
+  </script>
+</body>
+</html>
